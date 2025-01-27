@@ -1,28 +1,35 @@
 def gaussian_elimination(matrix, b):
-
     n = len(matrix)
+    augmented = [row + [b[i]] for i, row in enumerate(matrix)]
     
     for i in range(n):
-        matrix[i].append(b[i])
-    
-    for i in range(n):
-        diag = matrix[i][i]
+        # Partial pivoting
+        max_row = max(range(i, n), key=lambda k: abs(augmented[k][i]))
+        if i != max_row:
+            augmented[i], augmented[max_row] = augmented[max_row], augmented[i]
+        
+        diag = augmented[i][i]
         if diag == 0:
             raise ValueError("Matrix is singular or near-singular.")
-        for j in range(i, n + 1):
-            matrix[i][j] /= diag
         
+        # Normalize row
+        for j in range(i, n + 1):
+            augmented[i][j] /= diag
+        
+        # Eliminate below
         for k in range(i + 1, n):
-            factor = matrix[k][i]
+            factor = augmented[k][i]
             for j in range(i, n + 1):
-                matrix[k][j] -= factor * matrix[i][j]
+                augmented[k][j] -= factor * augmented[i][j]
     
+    # Back substitution
     x = [0] * n
     for i in range(n - 1, -1, -1):
-        x[i] = matrix[i][n] - sum(matrix[i][j] * x[j] for j in range(i + 1, n))
+        x[i] = augmented[i][n] - sum(augmented[i][j] * x[j] for j in range(i + 1, n))
     
     return x
 
+# Example usage
 A = [
     [2, 1, -1],
     [-3, -1, 2],
