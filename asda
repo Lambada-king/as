@@ -1,41 +1,29 @@
-def gaussian_elimination(matrix, b):
+def gauss_jordan_inverse(matrix):
     n = len(matrix)
-    augmented = [row + [b[i]] for i, row in enumerate(matrix)]
+    augmented = [row + [1 if i == j else 0 for j in range(n)] for i, row in enumerate(matrix)]
     
     for i in range(n):
-        # Partial pivoting
-        max_row = max(range(i, n), key=lambda k: abs(augmented[k][i]))
-        if i != max_row:
-            augmented[i], augmented[max_row] = augmented[max_row], augmented[i]
+        if augmented[i][i] == 0:
+            for j in range(i + 1, n):
+                if augmented[j][i] != 0:
+                    augmented[i], augmented[j] = augmented[j], augmented[i] 
+                    break
+            else:
+                raise ValueError("Matrix is singular and cannot be inverted.")
         
-        diag = augmented[i][i]
-        if diag == 0:
-            raise ValueError("Matrix is singular or near-singular.")
+        pivot = augmented[i][i]
+        augmented[i] = [element / pivot for element in augmented[i]] 
         
-        # Normalize row
-        for j in range(i, n + 1):
-            augmented[i][j] /= diag
-        
-        # Eliminate below
-        for k in range(i + 1, n):
-            factor = augmented[k][i]
-            for j in range(i, n + 1):
-                augmented[k][j] -= factor * augmented[i][j]
+        for j in range(n):
+            if i != j:
+                factor = augmented[j][i]
+                augmented[j] = [augmented[j][k] - factor * augmented[i][k] for k in range(2 * n)]  
     
-    # Back substitution
-    x = [0] * n
-    for i in range(n - 1, -1, -1):
-        x[i] = augmented[i][n] - sum(augmented[i][j] * x[j] for j in range(i + 1, n))
-    
-    return x
+    return [row[n:] for row in augmented]  
 
-# Example usage
-A = [
-    [2, 1, -1],
-    [-3, -1, 2],
-    [-2, 1, 2]
-]
-b = [8, -11, -3]
 
-solution = gaussian_elimination(A, b)
-print("Solution:", solution)
+A = [[2, 1], [5, 3]]
+A_inv = gauss_jordan_inverse(A)
+print("Inverse of A:")
+for row in A_inv:
+    print(row)
