@@ -1,0 +1,23 @@
+import sympy as sp
+
+def gram_schmidt(vectors):
+    orthonormal_set = []
+    for v in vectors:
+        w = sp.Matrix(v)
+        for u in orthonormal_set:
+            w -= (w.dot(u))*u
+        if w.norm() != 0:
+            w = w / w.norm()
+            orthonormal_set.append(w)
+    return orthonormal_set
+
+vectors = [
+    [1,2,3,4],
+    [2,3,4,5],
+    [3,4,5,6],
+    [4,5,6,7]
+]
+
+result = gram_schmidt(vectors)
+for vec in result:
+    print(vec)
