@@ -1,0 +1,22 @@
+import sympy as sp
+
+A = sp.Matrix([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+])
+
+eigen_data = A.eigenvects()
+
+print("="*50)
+print("Eigenvalues and Eigenvectors")
+print("="*50)
+
+for idx, (eigenvalue, multiplicity, eigenvectors) in enumerate(eigen_data, 1):
+    print(f"\nEigenvalue {idx}:")
+    sp.pprint(eigenvalue)
+    print(f"Multiplicity: {multiplicity}")
+    print("Eigenvectors:")
+    for vec in eigenvectors:
+        sp.pprint(vec)
+    print("-"*50)
