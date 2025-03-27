@@ -1,1 +1,29 @@
+import sympy as sp
 
+def compute_spaces(matrix):
+    A = sp.Matrix(matrix)
+    col_space = A.columnspace()
+    row_space = A.rowspace()
+    null_space = A.nullspace()
+    left_null_space = A.transpose().nullspace()
+
+    print("Column Space:")
+    for vec in col_space:
+        sp.pprint(vec)
+    print("\nRow Space:")
+    for vec in row_space:
+        sp.pprint(vec)
+    print("\nNull Space (Kernel of A):")
+    for vec in null_space:
+        sp.pprint(vec)
+    print("\nLeft Null Space (Kernel of A^T):")
+    for vec in left_null_space:
+        sp.pprint(vec)
+
+if __name__ == "__main__":
+    matrix = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+    compute_spaces(matrix)
