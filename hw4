@@ -1,0 +1,17 @@
+import sympy as sp
+
+A = sp.Matrix([[1,2,1],[2,4,3],[3,6,4]])
+
+x = A.nullspace()[0]
+x = x / x.norm()
+
+y = A.T.nullspace()[0]
+y = y / y.norm()
+
+z = A.rowspace()[0]
+z = z / z.norm()
+
+print("x =", x)
+print("y =", y)
+print("z =", z)
+
